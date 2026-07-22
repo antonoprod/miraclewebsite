@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Footer from "@/components/Footer";
 import { events, getEventBySlug } from "@/data/events";
 
 export function generateStaticParams() {
@@ -20,8 +21,9 @@ export default async function EventPage({
   }
 
   return (
-    <main className="min-h-screen bg-black px-6 py-24 text-white">
-      <article className="mx-auto max-w-6xl">
+    <>
+      <main className="min-h-screen bg-black px-6 py-24 text-white">
+        <article className="mx-auto max-w-6xl">
         <nav className="flex items-center justify-between gap-6">
           <Link
             href="/"
@@ -71,7 +73,9 @@ export default async function EventPage({
             />
           </div>
         </div>
-      </article>
-    </main>
+        </article>
+      </main>
+      <Footer />
+    </>
   );
 }

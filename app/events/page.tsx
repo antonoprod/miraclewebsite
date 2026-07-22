@@ -1,11 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import Footer from "@/components/Footer";
 import { events } from "@/data/events";
 
 export default function EventsPage() {
   return (
-    <main className="min-h-screen bg-black px-6 py-24 text-white">
-      <div className="mx-auto max-w-6xl">
+    <>
+      <main className="min-h-screen bg-black px-6 py-24 text-white">
+        <div className="mx-auto max-w-6xl">
         <nav className="mb-24 flex items-center justify-between">
           <Link
             href="/"
@@ -57,7 +59,9 @@ export default function EventsPage() {
             </Link>
           ))}
         </div>
-      </div>
-    </main>
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 }

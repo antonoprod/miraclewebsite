@@ -1,10 +1,12 @@
 import Link from "next/link";
 import CheckoutFlow from "@/components/CheckoutFlow";
+import Footer from "@/components/Footer";
 
 export default function CheckoutPage() {
   return (
-    <main className="min-h-screen bg-black px-6 py-10 text-white md:px-10 md:py-14">
-      <div className="mx-auto max-w-7xl">
+    <>
+      <main className="min-h-screen bg-black px-6 py-10 text-white md:px-10 md:py-14">
+        <div className="mx-auto max-w-7xl">
         <nav className="flex items-center justify-between">
           <Link href="/" className="text-lg font-semibold tracking-[-0.04em] transition hover:text-neutral-400">
             MIRACLE
@@ -14,7 +16,9 @@ export default function CheckoutPage() {
           </Link>
         </nav>
         <CheckoutFlow />
-      </div>
-    </main>
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 }
