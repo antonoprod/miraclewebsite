@@ -24,3 +24,38 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes hero-crossfade {
+  0%,
+  40% {
+    opacity: 1;
+  }
+
+  50%,
+  90% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.hero-slide {
+  animation: hero-crossfade 16s ease-in-out infinite;
+  will-change: opacity;
+}
+
+.hero-slide-secondary {
+  animation-delay: -8s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide {
+    animation: none;
+  }
+
+  .hero-slide-secondary {
+    display: none;
+  }
+}
