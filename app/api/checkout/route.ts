@@ -75,6 +75,14 @@ export async function POST(request: Request) {
       shipping_address_collection: { allowed_countries: ["ES"] },
       phone_number_collection: { enabled: true },
       billing_address_collection: "auto",
+      payment_intent_data: {
+        metadata: {
+          fulfillment_status: "awaiting_payment",
+          shipping_zone: zone,
+          contains_preorder: hasNicaso ? "true" : "false",
+          ships_together: shipsTogether ? "true" : "false",
+        },
+      },
       metadata: {
         ...cartMetadata(items),
         shipping_zone: zone,

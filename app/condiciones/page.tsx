@@ -23,7 +23,7 @@ export default function TermsPage() {
         <ul>
           <li>Titular: Antonio Villagrasa.</li>
           <li>NIF: 48409522L.</li>
-          <li>Domicilio profesional: Av de la Huerta 35, Alboraya.</li>
+          <li>Domicilio profesional: Av. de la Huerta 35, 46120 Alboraya, Valencia.</li>
         </ul>
       </section>
 
@@ -52,8 +52,8 @@ export default function TermsPage() {
         <h2>4. Pago</h2>
         <p>
           El pago se procesa en el Checkout seguro alojado por Stripe. Miracle no recibe ni almacena los datos
-          completos de la tarjeta. Hasta que se activen las claves de producción, el Checkout estará identificado como
-          entorno de prueba y no efectuará cargos reales.
+          completos de la tarjeta. Los cargos se realizan en euros y Stripe confirma el resultado de la operación antes
+          de que el pedido pase a preparación.
         </p>
       </section>
 

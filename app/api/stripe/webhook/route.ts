@@ -77,6 +77,27 @@ export async function POST(request: Request) {
         order_notification: notificationStatus,
       },
     });
+
+    const paymentIntentId =
+      typeof session.payment_intent === "string"
+        ? session.payment_intent
+        : session.payment_intent?.id;
+    if (paymentIntentId) {
+      const paymentIntent =
+        await getStripe().paymentIntents.retrieve(paymentIntentId);
+      const currentStatus = paymentIntent.metadata.fulfillment_status;
+      await getStripe().paymentIntents.update(paymentIntentId, {
+        metadata: {
+          checkout_session: session.id,
+          fulfillment_status:
+            !currentStatus || currentStatus === "awaiting_payment"
+              ? "preparing"
+              : currentStatus,
+          stock_validation: amountMatches ? "passed" : "manual_review",
+          address_validation: addressMatches ? "passed" : "manual_review",
+        },
+      });
+    }
   }
 
   return NextResponse.json({ received: true });
