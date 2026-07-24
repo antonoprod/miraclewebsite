@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { readCartMetadata } from "@/lib/inventory";
+import { sendOrderNotification } from "@/lib/order-email";
 import { getStripe } from "@/lib/stripe";
 import {
   getShippingZone,
@@ -60,12 +61,20 @@ export async function POST(request: Request) {
       session.amount_total === expectedItemsAmount + expectedShipping &&
       items.every((item) => Boolean(getVariant(item)));
 
+    const notificationStatus = await sendOrderNotification({
+      session,
+      items,
+      shippingZone: selectedZone as "peninsula" | "baleares",
+      requiresReview: !amountMatches || !addressMatches,
+    });
+
     // Idempotente: la sesión pagada es el registro de stock. Esta marca deja
     // constancia de que el webhook validó el pedido y su zona de envío.
     await getStripe().checkout.sessions.update(session.id, {
       metadata: {
         stock_applied: amountMatches ? "true" : "manual_review",
         address_validation: addressMatches ? "passed" : "manual_review",
+        order_notification: notificationStatus,
       },
     });
   }
