@@ -5,8 +5,13 @@ let stripeClient: Stripe | undefined;
 
 export function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
-  if (!key?.startsWith("sk_test_")) {
-    throw new Error("Stripe Sandbox no está configurado correctamente.");
+  const liveMode = process.env.NEXT_PUBLIC_STRIPE_MODE === "live";
+  const expectedKeyPrefix = liveMode ? "sk_live_" : "sk_test_";
+
+  if (!key?.startsWith(expectedKeyPrefix)) {
+    throw new Error(
+      `Stripe ${liveMode ? "Live" : "Sandbox"} no está configurado correctamente.`,
+    );
   }
   stripeClient ??= new Stripe(key);
   return stripeClient;
