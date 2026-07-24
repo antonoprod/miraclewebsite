@@ -13,8 +13,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Miracle",
-  description: "Miracle events and limited drops.",
+  metadataBase: new URL("https://www.miraclebgo.com"),
+  title: {
+    default: "Miracle",
+    template: "%s | Miracle",
+  },
+  description: "Eventos, música, comunidad y drops limitados de Miracle.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    siteName: "Miracle",
+    title: "Miracle",
+    description: "Eventos, música, comunidad y drops limitados de Miracle.",
+    url: "/",
+  },
 };
 
 export default function RootLayout({

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,6 +7,28 @@ import { events, getEventBySlug } from "@/data/events";
 
 export function generateStaticParams() {
   return events.map((event) => ({ slug: event.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const event = getEventBySlug(slug);
+  if (!event) return {};
+
+  return {
+    title: event.name,
+    description: event.description,
+    alternates: { canonical: `/events/${event.slug}` },
+    openGraph: {
+      title: event.name,
+      description: event.description,
+      url: `/events/${event.slug}`,
+      images: [{ url: event.image }],
+    },
+  };
 }
 
 export default async function EventPage({

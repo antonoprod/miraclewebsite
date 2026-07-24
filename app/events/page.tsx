@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import { events } from "@/data/events";
+
+export const metadata: Metadata = {
+  title: "Eventos",
+  description: "Próximos eventos de Miracle.",
+  alternates: { canonical: "/events" },
+};
 
 export default function EventsPage() {
   return (

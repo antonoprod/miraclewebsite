@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import ShopCatalog from "@/components/ShopCatalog";
+
+export const metadata: Metadata = {
+  title: "Drops",
+  description: "Drops limitados de Miracle: camisetas, gorras y colaboraciones.",
+  alternates: { canonical: "/shop" },
+};
 
 export default function ShopPage() {
   return (

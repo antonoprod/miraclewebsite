@@ -2,27 +2,29 @@ import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
 
 export const metadata: Metadata = {
-  title: "Condiciones de uso | Miracle",
-  description: "Condiciones aplicables al acceso y uso de la web de Miracle.",
+  title: "Condiciones de compra y uso",
+  description: "Condiciones aplicables a las compras y al uso de la web de Miracle.",
 };
 
 export default function TermsPage() {
   return (
     <LegalPage
       eyebrow="Legal"
-      title="Condiciones de uso"
-      intro="Estas condiciones regulan el acceso a la versión provisional de la web de Miracle y describen el alcance actual de sus contenidos y funcionalidades."
+      title="Condiciones de compra y uso"
+      intro="Estas condiciones regulan la compra de productos Miracle, los envíos, las devoluciones y el uso de la web."
     >
       <section>
         <h2>1. Titular y contacto</h2>
         <p>
-          Esta web corresponde al proyecto cultural Miracle. Puedes contactar en{" "}
+          Esta web y su tienda corresponden al proyecto cultural Miracle, gestionado por una persona trabajadora
+          autónoma. Puedes contactar antes y después de la compra en{" "}
           <a href="mailto:info@miraclebgo.com">info@miraclebgo.com</a>.
         </p>
-        <p>
-          La identidad legal completa y el domicilio profesional se incorporarán antes de habilitar cualquier venta o
-          contratación online.
-        </p>
+        <ul>
+          <li>Titular: Antonio Villagrasa.</li>
+          <li>NIF: 48409522L.</li>
+          <li>Domicilio profesional: Av de la Huerta 35, Alboraya.</li>
+        </ul>
       </section>
 
       <section>
@@ -34,68 +36,91 @@ export default function TermsPage() {
       </section>
 
       <section>
-        <h2>3. Tienda y checkout provisional</h2>
+        <h2>3. Productos, precios y pedido</h2>
         <p>
-          La sección Shop y el checkout son actualmente una demostración. No existe una pasarela de pago activa, no se
-          realiza ningún cobro y la confirmación de un pedido de prueba no crea una compraventa, reserva ni obligación
-          de entrega.
+          Las características, variantes, disponibilidad y precio de cada producto se muestran antes de añadirlo a la
+          bolsa. Los precios se expresan en euros e incluyen los impuestos aplicables. Los gastos de envío se calculan
+          según el código postal y se muestran antes de acceder al pago.
         </p>
         <p>
-          Los productos, precios, disponibilidad y gastos de envío que aparecen tienen carácter informativo y podrán
-          cambiar antes de activar la tienda. No envíes datos de pago a través de ningún formulario o canal no
-          habilitado expresamente por Miracle.
-        </p>
-      </section>
-
-      <section>
-        <h2>4. Futuras ventas</h2>
-        <p>
-          Antes de aceptar compras reales publicaremos las condiciones de contratación aplicables, incluyendo la
-          identidad del vendedor, precios e impuestos, formas de pago, zonas y costes de envío, entrega, garantía,
-          devoluciones, derecho de desistimiento y atención posventa. También se solicitará la aceptación expresa de
-          esas condiciones antes de pagar.
+          Antes de pagar podrás revisar productos, variantes, cantidades, subtotal, envío y total. El pedido se
+          considera aceptado cuando Stripe confirma el pago y se muestra la página de confirmación.
         </p>
       </section>
 
       <section>
-        <h2>5. Uso responsable</h2>
-        <p>Al utilizar la web te comprometes a:</p>
+        <h2>4. Pago</h2>
+        <p>
+          El pago se procesa en el Checkout seguro alojado por Stripe. Miracle no recibe ni almacena los datos
+          completos de la tarjeta. Hasta que se activen las claves de producción, el Checkout estará identificado como
+          entorno de prueba y no efectuará cargos reales.
+        </p>
+      </section>
+
+      <section>
+        <h2>5. Envíos y entrega</h2>
         <ul>
-          <li>No emplearla para actividades ilícitas, fraudulentas o que perjudiquen a terceros.</li>
-          <li>No interferir en su funcionamiento ni intentar acceder a sistemas o datos sin autorización.</li>
-          <li>No introducir contenido malicioso mediante formularios u otros medios.</li>
+          <li>España peninsular: 4,90 €.</li>
+          <li>Baleares: 7,90 €.</li>
+          <li>Canarias, Ceuta y Melilla: no disponibles actualmente.</li>
+          <li>Gorras disponibles: entrega estimada de 2–4 días laborables.</li>
+          <li>Camiseta Miracle x Nicaso: preventa con producción estimada de 3–5 semanas, más transporte.</li>
         </ul>
-      </section>
-
-      <section>
-        <h2>6. Propiedad intelectual</h2>
         <p>
-          Los textos, fotografías, diseños, marcas, logotipos y demás contenidos pertenecen a Miracle o se utilizan
-          con autorización de sus titulares. No pueden reproducirse, distribuirse o explotarse con fines comerciales
-          sin permiso previo, salvo en los casos permitidos por la ley.
+          Si un pedido combina productos disponibles y productos en preventa, se enviará completo cuando la preventa
+          esté preparada. Los plazos son estimaciones y comunicaremos cualquier retraso relevante.
         </p>
       </section>
 
       <section>
-        <h2>7. Disponibilidad y enlaces</h2>
+        <h2>6. Desistimiento y devoluciones</h2>
         <p>
-          Procuramos mantener la información disponible y actualizada, pero esta versión puede contener errores,
-          interrupciones o funcionalidades incompletas. Los enlaces a servicios externos se facilitan como referencia;
-          sus titulares son responsables de sus propios contenidos y condiciones.
+          Puedes desistir de una compra online dentro de los 14 días naturales siguientes a la recepción, sin
+          necesidad de justificar la decisión. Comunícalo por escrito a{" "}
+          <a href="mailto:info@miraclebgo.com">info@miraclebgo.com</a>, indicando nombre, número de pedido, productos y
+          la decisión inequívoca de desistir.
+        </p>
+        <p>
+          Los productos deben devolverse sin uso y con sus elementos originales. El cliente asume el coste directo de
+          la devolución, salvo error de Miracle o producto defectuoso. Reembolsaremos los importes legalmente
+          correspondientes mediante el mismo medio de pago, pudiendo retener el reembolso hasta recibir los bienes o
+          una prueba de su devolución.
+        </p>
+        <p>
+          La fabricación en lotes de la camiseta Nicaso no elimina el derecho de desistimiento, salvo que una unidad se
+          confeccione conforme a especificaciones individuales o esté claramente personalizada.
         </p>
       </section>
 
       <section>
-        <h2>8. Responsabilidad</h2>
+        <h2>7. Productos defectuosos y garantía</h2>
         <p>
-          Nada en estas condiciones limita los derechos que la normativa reconoce a consumidores y usuarios. Miracle
-          no responde de daños derivados de un uso contrario a estas condiciones, de actuaciones de terceros o de
-          incidencias técnicas fuera de su control razonable.
+          Si el producto llega dañado, es incorrecto o presenta una falta de conformidad, escríbenos cuanto antes con
+          el número de pedido y fotografías. Aplicaremos la garantía legal vigente para bienes nuevos, sin limitar los
+          derechos de reparación, sustitución, reducción del precio o resolución que correspondan.
         </p>
       </section>
 
       <section>
-        <h2>9. Legislación aplicable</h2>
+        <h2>8. Disponibilidad y cancelaciones</h2>
+        <p>
+          El stock se valida de nuevo antes de crear el pago. Si excepcionalmente no pudiéramos servir un pedido ya
+          pagado, lo comunicaremos y reembolsaremos sin demora el importe correspondiente. En preventas informaremos
+          de cambios sustanciales en el plazo y ofreceremos la cancelación cuando legalmente proceda.
+        </p>
+      </section>
+
+      <section>
+        <h2>9. Uso responsable y propiedad intelectual</h2>
+        <p>
+          No puedes utilizar la web de forma ilícita, fraudulenta, perjudicial o que interfiera con su funcionamiento.
+          Los textos, fotografías, diseños, marcas y logotipos pertenecen a Miracle o se utilizan con autorización y
+          no pueden explotarse comercialmente sin permiso, salvo los usos permitidos por la ley.
+        </p>
+      </section>
+
+      <section>
+        <h2>10. Legislación aplicable</h2>
         <p>
           Estas condiciones se interpretan conforme a la legislación española. Cualquier controversia se someterá a
           los juzgados que correspondan legalmente, respetando en todo caso el fuero aplicable a consumidores y

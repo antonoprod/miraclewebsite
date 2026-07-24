@@ -24,6 +24,7 @@ function ProductCard({
   );
   const [added, setAdded] = useState(false);
   const soldOut = product.status === "sold-out";
+  const preOrder = product.status === "pre-order";
 
   function addToBag() {
     onAdd(product, selectedOption);
@@ -38,6 +39,7 @@ function ProductCard({
           src={product.images[0]}
           alt={product.imageAlt}
           fill
+          priority={product.id === "miracle-x-nicaso"}
           sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
           className={`object-cover transition duration-700 ${
             product.images[1]
@@ -57,7 +59,7 @@ function ProductCard({
         )}
 
         <p className="absolute top-4 left-4 bg-black px-3 py-2 text-[0.65rem] uppercase tracking-[0.22em] text-white">
-          {soldOut ? "Agotado" : "Disponible"}
+          {soldOut ? "Agotado" : preOrder ? "PRE-ORDER" : "Disponible"}
         </p>
       </div>
 
@@ -119,6 +121,10 @@ function ProductCard({
           </fieldset>
         )}
 
+        {product.note && !soldOut && (
+          <p className="mt-5 text-xs leading-relaxed text-neutral-500">{product.note}</p>
+        )}
+
         <button
           type="button"
           disabled={soldOut}
@@ -136,7 +142,10 @@ export default function ShopCatalog() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [bagOpen, setBagOpen] = useState(false);
 
-  useEffect(() => setItems(readCart()), []);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setItems(readCart()), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   function updateCart(nextItems: CartItem[]) {
     setItems(nextItems);
@@ -148,6 +157,8 @@ export default function ShopCatalog() {
     const option = product.options?.find((item) => item.value === optionValue);
     const key = `${product.id}:${optionValue || "default"}`;
     const existing = items.find((item) => item.key === key);
+    const limit = option?.stock ?? 10;
+    if ((existing?.quantity ?? 0) >= limit) return;
     const nextItems = existing
       ? items.map((item) =>
           item.key === key ? { ...item, quantity: item.quantity + 1 } : item,
@@ -173,11 +184,13 @@ export default function ShopCatalog() {
 
   function changeQuantity(key: string, change: number) {
     const nextItems = items
-      .map((item) =>
-        item.key === key
-          ? { ...item, quantity: Math.max(0, item.quantity + change) }
-          : item,
-      )
+      .map((item) => {
+        if (item.key !== key) return item;
+        const product = products.find((entry) => entry.id === item.productId);
+        const option = product?.options?.find((entry) => entry.value === item.optionValue);
+        const limit = option?.stock ?? 10;
+        return { ...item, quantity: Math.min(limit, Math.max(0, item.quantity + change)) };
+      })
       .filter((item) => item.quantity > 0);
     updateCart(nextItems);
   }

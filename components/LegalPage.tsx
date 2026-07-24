@@ -25,7 +25,7 @@ export function LegalPage({ eyebrow, title, intro, children }: LegalPageProps) {
           <p className="text-xs uppercase tracking-[0.25em] text-neutral-500">{eyebrow}</p>
           <h1 className="mt-5 text-5xl font-semibold tracking-[-0.05em] md:text-7xl">{title}</h1>
           <p className="mt-8 max-w-2xl leading-relaxed text-neutral-400">{intro}</p>
-          <p className="mt-4 text-sm text-neutral-600">Última actualización: 22 de julio de 2026</p>
+          <p className="mt-4 text-sm text-neutral-600">Última actualización: 24 de julio de 2026</p>
         </header>
 
         <article className="space-y-12 py-14 leading-relaxed text-neutral-300 [&_a]:text-white [&_a]:underline [&_a]:underline-offset-4 [&_h2]:text-2xl [&_h2]:font-medium [&_h2]:tracking-[-0.03em] [&_li]:ml-5 [&_li]:list-disc [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:space-y-2">

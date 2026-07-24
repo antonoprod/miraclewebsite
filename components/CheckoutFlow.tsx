@@ -2,79 +2,67 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, type FormEvent } from "react";
-import { CART_STORAGE_KEY, cartSubtotal, readCart, type CartItem } from "@/data/cart";
-
-type Step = "details" | "review" | "confirmed";
-type ShippingDetails = {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  postalCode: string;
-  city: string;
-  country: string;
-};
-
-const emptyDetails: ShippingDetails = {
-  name: "",
-  email: "",
-  phone: "",
-  address: "",
-  postalCode: "",
-  city: "",
-  country: "ES",
-};
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { cartSubtotal, readCart, type CartItem } from "@/data/cart";
 
 export default function CheckoutFlow() {
+  const testMode = process.env.NEXT_PUBLIC_STRIPE_MODE !== "live";
   const [items, setItems] = useState<CartItem[]>([]);
   const [loaded, setLoaded] = useState(false);
-  const [step, setStep] = useState<Step>("details");
-  const [details, setDetails] = useState<ShippingDetails>(emptyDetails);
+  const [postalCode, setPostalCode] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
-    setItems(readCart());
-    setLoaded(true);
+    const timer = window.setTimeout(() => {
+      setItems(readCart());
+      setLoaded(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
-  function reviewOrder(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    setDetails({
-      name: String(form.get("name") ?? ""),
-      email: String(form.get("email") ?? ""),
-      phone: String(form.get("phone") ?? ""),
-      address: String(form.get("address") ?? ""),
-      postalCode: String(form.get("postalCode") ?? ""),
-      city: String(form.get("city") ?? ""),
-      country: String(form.get("country") ?? "ES"),
-    });
-    setStep("review");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  const provisionalShipping = useMemo(() => {
+    if (!/^\d{5}$/.test(postalCode)) return null;
+    const province = Number(postalCode.slice(0, 2));
+    if ([35, 38, 51, 52].includes(province)) return "unavailable";
+    return province === 7 ? 7.9 : 4.9;
+  }, [postalCode]);
 
-  function confirmOrder() {
-    window.localStorage.removeItem(CART_STORAGE_KEY);
-    setStep("confirmed");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  async function startCheckout(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    setSubmitting(true);
+
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((item) => ({
+            productId: item.productId,
+            variant: item.optionValue ?? "",
+            quantity: item.quantity,
+          })),
+          shippingPostalCode: postalCode,
+        }),
+      });
+      const result = (await response.json()) as { url?: string; error?: string };
+      if (!response.ok || !result.url) {
+        throw new Error(result.error ?? "No se pudo iniciar el pago.");
+      }
+      window.location.assign(result.url);
+    } catch (checkoutError) {
+      setError(
+        checkoutError instanceof Error
+          ? checkoutError.message
+          : "No se pudo iniciar el pago.",
+      );
+      setSubmitting(false);
+    }
   }
 
   if (!loaded) return <div className="min-h-[40vh]" />;
-
-  if (step === "confirmed") {
-    return (
-      <section className="mx-auto max-w-2xl py-24 text-center">
-        <p className="text-xs uppercase tracking-[0.25em] text-neutral-500">Pedido de prueba recibido</p>
-        <h1 className="mt-6 text-5xl font-semibold tracking-[-0.05em] md:text-7xl">Gracias{details.name ? `, ${details.name}` : ""}.</h1>
-        <p className="mx-auto mt-8 max-w-lg leading-relaxed text-neutral-400">
-          El flujo funciona, pero todavía no se ha realizado ningún cobro ni se ha enviado un pedido real. El pago se activará en la siguiente fase.
-        </p>
-        <Link href="/shop" className="mt-10 inline-block border border-white px-6 py-4 text-xs uppercase tracking-[0.2em] transition hover:bg-white hover:text-black">
-          Volver a Drops
-        </Link>
-      </section>
-    );
-  }
 
   if (items.length === 0) {
     return (
@@ -87,81 +75,109 @@ export default function CheckoutFlow() {
     );
   }
 
+  const hasNicaso = items.some((item) => item.productId === "miracle-x-nicaso");
+  const hasCap = items.some((item) => item.productId === "miracle-cap");
+  const shippingAmount =
+    typeof provisionalShipping === "number" ? provisionalShipping : 0;
+
   return (
     <div className="grid gap-16 py-16 lg:grid-cols-[minmax(0,1fr)_380px] lg:py-24">
       <section>
         <p className="text-xs uppercase tracking-[0.25em] text-neutral-500">
-          Checkout · {step === "details" ? "01 Datos" : "02 Revisión"}
+          Checkout seguro · Stripe{testMode ? " Sandbox" : ""}
         </p>
         <h1 className="mt-5 text-5xl font-semibold tracking-[-0.05em] md:text-7xl">
-          {step === "details" ? "Envío" : "Revisa tu pedido"}
+          Entrega
         </h1>
+        <p className="mt-8 max-w-xl leading-relaxed text-neutral-400">
+          Confirma primero la zona de envío. En el Checkout alojado de Stripe
+          introducirás la dirección completa, el email, el teléfono y los datos
+          de pago.
+        </p>
 
-        {step === "details" ? (
-          <form onSubmit={reviewOrder} className="mt-14 grid gap-6 md:grid-cols-2">
-            <label className="md:col-span-2">
-              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-neutral-500">Nombre completo</span>
-              <input required name="name" defaultValue={details.name} autoComplete="name" className="w-full border-b border-neutral-700 bg-transparent px-0 py-3 outline-none transition focus:border-white" />
-            </label>
-            <label>
-              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-neutral-500">Email</span>
-              <input required type="email" name="email" defaultValue={details.email} autoComplete="email" className="w-full border-b border-neutral-700 bg-transparent px-0 py-3 outline-none transition focus:border-white" />
-            </label>
-            <label>
-              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-neutral-500">Teléfono</span>
-              <input required type="tel" name="phone" defaultValue={details.phone} autoComplete="tel" className="w-full border-b border-neutral-700 bg-transparent px-0 py-3 outline-none transition focus:border-white" />
-            </label>
-            <label className="md:col-span-2">
-              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-neutral-500">Dirección</span>
-              <input required name="address" defaultValue={details.address} autoComplete="street-address" className="w-full border-b border-neutral-700 bg-transparent px-0 py-3 outline-none transition focus:border-white" />
-            </label>
-            <label>
-              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-neutral-500">Código postal</span>
-              <input required name="postalCode" defaultValue={details.postalCode} autoComplete="postal-code" className="w-full border-b border-neutral-700 bg-transparent px-0 py-3 outline-none transition focus:border-white" />
-            </label>
-            <label>
-              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-neutral-500">Ciudad</span>
-              <input required name="city" defaultValue={details.city} autoComplete="address-level2" className="w-full border-b border-neutral-700 bg-transparent px-0 py-3 outline-none transition focus:border-white" />
-            </label>
-            <label className="md:col-span-2">
-              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-neutral-500">País</span>
-              <select required name="country" defaultValue={details.country} className="w-full border-b border-neutral-700 bg-black px-0 py-3 outline-none transition focus:border-white">
-                <option value="ES">España</option>
-              </select>
-            </label>
-            <button type="submit" className="mt-6 bg-white px-6 py-4 text-xs uppercase tracking-[0.2em] text-black transition hover:bg-neutral-200 md:col-span-2">
-              Revisar pedido
-            </button>
-          </form>
-        ) : (
-          <div className="mt-14 border-t border-neutral-800 pt-8">
-            <p className="max-w-xl leading-relaxed text-neutral-400">
-              Comprueba los artículos antes de confirmar. Los gastos de envío y el pago real todavía no están activos.
+        <form onSubmit={startCheckout} className="mt-14 max-w-xl">
+          <label>
+            <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-neutral-500">
+              Código postal de entrega
+            </span>
+            <input
+              required
+              name="postalCode"
+              value={postalCode}
+              onChange={(event) => setPostalCode(event.target.value.replace(/\D/g, "").slice(0, 5))}
+              inputMode="numeric"
+              pattern="\d{5}"
+              autoComplete="postal-code"
+              placeholder="46001"
+              className="w-full border-b border-neutral-700 bg-transparent px-0 py-3 outline-none transition focus:border-white"
+            />
+          </label>
+
+          <div className="mt-8 border-y border-neutral-800 py-6 text-sm text-neutral-400">
+            {provisionalShipping === "unavailable" ? (
+              <p className="text-red-300">Canarias, Ceuta y Melilla no están disponibles.</p>
+            ) : typeof provisionalShipping === "number" ? (
+              <p>
+                {provisionalShipping === 7.9 ? "Baleares" : "España peninsular"} ·{" "}
+                {provisionalShipping.toFixed(2).replace(".", ",")} €
+              </p>
+            ) : (
+              <p>Introduce el código postal para calcular el envío.</p>
+            )}
+            <p className="mt-3">
+              {hasNicaso
+                ? hasCap
+                  ? "PRE-ORDER 3–5 semanas. La gorra y la camiseta se enviarán juntas."
+                  : "PRE-ORDER: producción 3–5 semanas + transporte."
+                : "Gorras: entrega estimada de 2–4 días laborables."}
             </p>
-            <div className="mt-10 grid gap-8 border-y border-neutral-800 py-8 text-sm sm:grid-cols-2">
-              <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-neutral-500">Contacto</p>
-                <p className="mt-3">{details.name}</p>
-                <p className="mt-1 text-neutral-400">{details.email}</p>
-                <p className="mt-1 text-neutral-400">{details.phone}</p>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-neutral-500">Entrega</p>
-                <p className="mt-3">{details.address}</p>
-                <p className="mt-1 text-neutral-400">{details.postalCode} {details.city}</p>
-                <p className="mt-1 text-neutral-400">España</p>
-              </div>
-            </div>
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <button type="button" onClick={confirmOrder} className="bg-white px-6 py-4 text-xs uppercase tracking-[0.2em] text-black transition hover:bg-neutral-200">
-                Confirmar pedido de prueba
-              </button>
-              <button type="button" onClick={() => setStep("details")} className="border border-neutral-700 px-6 py-4 text-xs uppercase tracking-[0.2em] transition hover:border-white">
-                Editar datos
-              </button>
-            </div>
           </div>
-        )}
+
+          {error && (
+            <p role="alert" className="mt-6 text-sm text-red-300">
+              {error}
+            </p>
+          )}
+          <label className="mt-8 flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-neutral-400">
+            <input
+              required
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(event) => setTermsAccepted(event.target.checked)}
+              className="mt-1 h-4 w-4 accent-white"
+            />
+            <span>
+              He revisado el pedido y acepto las{" "}
+              <Link href="/condiciones" className="text-white underline underline-offset-4">
+                condiciones de compra
+              </Link>{" "}
+              y la{" "}
+              <Link href="/privacidad" className="text-white underline underline-offset-4">
+                política de privacidad
+              </Link>
+              .
+            </span>
+          </label>
+          <button
+            type="submit"
+            disabled={
+              submitting ||
+              !termsAccepted ||
+              provisionalShipping === "unavailable" ||
+              typeof provisionalShipping !== "number"
+            }
+            className="mt-8 w-full bg-white px-6 py-4 text-xs uppercase tracking-[0.2em] text-black transition enabled:hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {submitting ? "Abriendo Stripe…" : "Continuar al pago seguro"}
+          </button>
+          <p className="mt-4 text-xs leading-relaxed text-neutral-500">
+            {testMode
+              ? "Entorno de prueba: no se efectuará ningún cargo real. "
+              : "Pago seguro procesado por Stripe. "}
+            El servidor vuelve a validar productos, variantes, cantidades,
+            precios, stock y zona de envío.
+          </p>
+        </form>
       </section>
 
       <aside className="border-t border-neutral-800 pt-8 lg:border-t-0 lg:border-l lg:pl-8">
@@ -176,7 +192,8 @@ export default function CheckoutFlow() {
                 <div>
                   <p>{item.name}</p>
                   <p className="mt-1 text-xs text-neutral-500">
-                    {item.optionName ? `${item.optionLabel}: ${item.optionName} · ` : ""}Cantidad: {item.quantity}
+                    {item.optionName ? `${item.optionLabel}: ${item.optionName} · ` : ""}
+                    Cantidad: {item.quantity}
                   </p>
                 </div>
                 <p className="shrink-0">{item.price * item.quantity} €</p>
@@ -186,8 +203,14 @@ export default function CheckoutFlow() {
         </div>
         <div className="mt-8 space-y-3 border-t border-neutral-800 pt-6 text-sm">
           <div className="flex justify-between"><span>Subtotal</span><span>{cartSubtotal(items)} €</span></div>
-          <div className="flex justify-between text-neutral-500"><span>Envío</span><span>Por calcular</span></div>
-          <div className="flex justify-between border-t border-neutral-800 pt-4 text-lg"><span>Total provisional</span><span>{cartSubtotal(items)} €</span></div>
+          <div className="flex justify-between text-neutral-500">
+            <span>Envío</span>
+            <span>{shippingAmount ? `${shippingAmount.toFixed(2).replace(".", ",")} €` : "Por calcular"}</span>
+          </div>
+          <div className="flex justify-between border-t border-neutral-800 pt-4 text-lg">
+            <span>Total provisional</span>
+            <span>{(cartSubtotal(items) + shippingAmount).toFixed(2).replace(".", ",")} €</span>
+          </div>
         </div>
       </aside>
     </div>
