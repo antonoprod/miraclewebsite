@@ -7,6 +7,7 @@ export type Event = {
   city: string;
   description: string;
   image: string;
+  ticketUrl?: string;
 };
 
 export const events: Event[] = [
@@ -20,6 +21,8 @@ export const events: Event[] = [
     description:
       "A summer gathering by MIRACLE and CALABLAVA around music, creativity and community.",
     image: "/events/miracle-x-calablava-01-08-2026.png",
+    ticketUrl:
+      "https://site.fourvenues.com/en/calablava_club/events/miracle--club-hasta-2130-pool-hasta-las-0300-01-08-2026-O3NN",
   },
 ];
 

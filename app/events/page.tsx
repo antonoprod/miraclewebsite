@@ -37,33 +37,52 @@ export default function EventsPage() {
 
         <div className="mt-16 border-t border-neutral-800">
           {events.map((event) => (
-            <Link
+            <article
               key={event.slug}
-              href={`/events/${event.slug}`}
               className="group grid gap-8 border-b border-neutral-800 py-10 md:grid-cols-[minmax(0,1fr)_minmax(240px,360px)] md:items-end"
             >
               <div className="md:pb-4">
                 <p className="text-sm uppercase tracking-[0.3em] text-neutral-500">
                   {event.displayDate} · {event.city}
                 </p>
-                <h2 className="mt-4 text-4xl font-semibold tracking-tight transition group-hover:text-neutral-300 md:text-6xl">
-                  {event.name}
-                </h2>
-                <p className="mt-8 text-sm uppercase tracking-[0.2em]">
-                  View event →
-                </p>
+                <Link href={`/events/${event.slug}`}>
+                  <h2 className="mt-4 text-4xl font-semibold tracking-tight transition hover:text-neutral-300 md:text-6xl">
+                    {event.name}
+                  </h2>
+                </Link>
+                <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 text-sm uppercase tracking-[0.2em]">
+                  <Link
+                    href={`/events/${event.slug}`}
+                    className="transition hover:text-neutral-400"
+                  >
+                    View event →
+                  </Link>
+                  {event.ticketUrl ? (
+                    <a
+                      href={event.ticketUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition hover:text-neutral-400"
+                    >
+                      Buy tickets ↗
+                    </a>
+                  ) : null}
+                </div>
               </div>
 
-              <div className="relative aspect-[1055/1491] overflow-hidden bg-neutral-900">
-                <Image
-                  src={event.image}
-                  alt={`Poster for ${event.name}`}
-                  fill
-                  sizes="(min-width: 768px) 360px, 100vw"
-                  className="object-cover transition duration-500 group-hover:scale-[1.02]"
-                />
-              </div>
-            </Link>
+              <Link
+                href={`/events/${event.slug}`}
+                className="relative aspect-[1055/1491] overflow-hidden bg-neutral-900"
+              >
+                  <Image
+                    src={event.image}
+                    alt={`Poster for ${event.name}`}
+                    fill
+                    sizes="(min-width: 768px) 360px, 100vw"
+                    className="object-cover transition duration-500 group-hover:scale-[1.02]"
+                  />
+              </Link>
+            </article>
           ))}
         </div>
         </div>

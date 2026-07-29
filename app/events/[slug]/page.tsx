@@ -82,6 +82,17 @@ export default async function EventPage({
               <p className="mt-10 max-w-xl text-lg leading-relaxed text-neutral-400">
                 {event.description}
               </p>
+
+              {event.ticketUrl ? (
+                <a
+                  href={event.ticketUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-12 inline-flex border border-white px-7 py-4 text-sm uppercase tracking-[0.22em] transition hover:bg-white hover:text-black"
+                >
+                  Buy tickets ↗
+                </a>
+              ) : null}
             </div>
           </div>
 
