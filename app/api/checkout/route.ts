@@ -48,8 +48,8 @@ export async function POST(request: Request) {
                 item.productId === "miracle-x-nicaso"
                   ? "PRE-ORDER. Producción estimada: 3–5 semanas + transporte."
                   : shipsTogether
-                    ? "Entrega junto al PRE-ORDER del pedido (3–5 semanas)."
-                    : "Entrega estimada: 2–4 días laborables.",
+                    ? "PRE-ORDER. Gorra: 4 semanas. Entrega conjunta cuando todo esté preparado (3–5 semanas)."
+                    : "PRE-ORDER. Entrega estimada: 4 semanas.",
             },
           },
         };
@@ -66,8 +66,8 @@ export async function POST(request: Request) {
                   maximum: { unit: "week", value: 5 },
                 }
               : {
-                  minimum: { unit: "business_day", value: 2 },
-                  maximum: { unit: "business_day", value: 4 },
+                  minimum: { unit: "week", value: 4 },
+                  maximum: { unit: "week", value: 4 },
                 },
           },
         },
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
         metadata: {
           fulfillment_status: "awaiting_payment",
           shipping_zone: zone,
-          contains_preorder: hasNicaso ? "true" : "false",
+          contains_preorder: "true",
           ships_together: shipsTogether ? "true" : "false",
         },
       },
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
         ...cartMetadata(items),
         shipping_zone: zone,
         shipping_postal_code: postalCode,
-        fulfillment: hasNicaso ? "preorder_3_5_weeks" : "cap_2_4_business_days",
+        fulfillment: hasNicaso ? "preorder_3_5_weeks" : "cap_preorder_4_weeks",
         ship_together: shipsTogether ? "true" : "false",
       },
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,

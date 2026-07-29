@@ -199,8 +199,8 @@ export default function ShopCatalog() {
     <>
       <div className="flex items-end justify-between gap-6 border-b border-neutral-800 pb-6">
         <p className="max-w-xl text-neutral-400">
-          Three Miracle drops. Two available now and the original T-shirt
-          preserved in the archive.
+          Three Miracle drops. Two available as pre-order and the original
+          T-shirt preserved in the archive.
         </p>
         <button
           type="button"

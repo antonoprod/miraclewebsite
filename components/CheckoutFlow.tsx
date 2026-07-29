@@ -127,9 +127,9 @@ export default function CheckoutFlow() {
             <p className="mt-3">
               {hasNicaso
                 ? hasCap
-                  ? "PRE-ORDER 3–5 semanas. La gorra y la camiseta se enviarán juntas."
+                  ? "PRE-ORDER: gorra 4 semanas y camiseta 3–5 semanas. Se enviarán juntas cuando todo esté preparado."
                   : "PRE-ORDER: producción 3–5 semanas + transporte."
-                : "Gorras: entrega estimada de 2–4 días laborables."}
+                : "PRE-ORDER: entrega estimada de la gorra en 4 semanas."}
             </p>
           </div>
 

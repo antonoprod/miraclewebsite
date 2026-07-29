@@ -63,7 +63,7 @@ export default function TermsPage() {
           <li>España peninsular: 4,90 €.</li>
           <li>Baleares: 7,90 €.</li>
           <li>Canarias, Ceuta y Melilla: no disponibles actualmente.</li>
-          <li>Gorras disponibles: entrega estimada de 2–4 días laborables.</li>
+          <li>Gorras Miracle: preventa con entrega estimada de 4 semanas.</li>
           <li>Camiseta Miracle x Nicaso: preventa con producción estimada de 3–5 semanas, más transporte.</li>
         </ul>
         <p>

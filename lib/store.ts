@@ -6,8 +6,8 @@ export const STORE_CATALOG = {
     name: "Gorra Miracle",
     unitAmount: 1800,
     variants: {
-      taronja: { label: "Taronja", initialStock: 10 },
-      "azul-fondo": { label: "Azul fondo", initialStock: 9 },
+      taronja: { label: "Taronja" },
+      "azul-fondo": { label: "Azul fondo" },
     },
   },
   "miracle-x-nicaso": {
