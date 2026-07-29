@@ -34,3 +34,13 @@ export function cartCount(items: CartItem[]) {
 export function cartSubtotal(items: CartItem[]) {
   return items.reduce((total, item) => total + item.price * item.quantity, 0);
 }
+
+export function cartItemDelivery(productId: string) {
+  if (productId === "miracle-cap") {
+    return "PRE-ORDER · Entrega estimada: 4 semanas.";
+  }
+  if (productId === "miracle-x-nicaso") {
+    return "PRE-ORDER · Producción estimada: 3–5 semanas.";
+  }
+  return null;
+}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   cartCount,
+  cartItemDelivery,
   cartSubtotal,
   readCart,
   writeCart,
@@ -260,6 +261,11 @@ export default function ShopCatalog() {
                         {item.optionName && (
                           <p className="mt-1 text-xs text-neutral-500">
                             {item.optionLabel}: {item.optionName}
+                          </p>
+                        )}
+                        {cartItemDelivery(item.productId) && (
+                          <p className="mt-2 text-[0.68rem] leading-relaxed text-neutral-500">
+                            {cartItemDelivery(item.productId)}
                           </p>
                         )}
                       </div>

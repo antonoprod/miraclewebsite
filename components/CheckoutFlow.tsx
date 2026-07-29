@@ -3,7 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { cartSubtotal, readCart, type CartItem } from "@/data/cart";
+import {
+  cartItemDelivery,
+  cartSubtotal,
+  readCart,
+  type CartItem,
+} from "@/data/cart";
 
 export default function CheckoutFlow() {
   const testMode = process.env.NEXT_PUBLIC_STRIPE_MODE !== "live";
@@ -195,6 +200,11 @@ export default function CheckoutFlow() {
                     {item.optionName ? `${item.optionLabel}: ${item.optionName} · ` : ""}
                     Cantidad: {item.quantity}
                   </p>
+                  {cartItemDelivery(item.productId) && (
+                    <p className="mt-2 text-[0.68rem] leading-relaxed text-neutral-500">
+                      {cartItemDelivery(item.productId)}
+                    </p>
+                  )}
                 </div>
                 <p className="shrink-0">{item.price * item.quantity} €</p>
               </div>
