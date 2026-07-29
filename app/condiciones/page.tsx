@@ -64,7 +64,7 @@ export default function TermsPage() {
           <li>Baleares: 7,90 €.</li>
           <li>Canarias, Ceuta y Melilla: no disponibles actualmente.</li>
           <li>Gorras Miracle: preventa con entrega estimada de 4 semanas.</li>
-          <li>Camiseta Miracle x Nicaso: preventa con producción estimada de 3–5 semanas, más transporte.</li>
+          <li>Camiseta Miracle x Nicaso: preventa con entrega estimada de 3–5 semanas.</li>
         </ul>
         <p>
           Si un pedido combina productos disponibles y productos en preventa, se enviará completo cuando la preventa
@@ -87,8 +87,8 @@ export default function TermsPage() {
           una prueba de su devolución.
         </p>
         <p>
-          La fabricación en lotes de la camiseta Nicaso no elimina el derecho de desistimiento, salvo que una unidad se
-          confeccione conforme a especificaciones individuales o esté claramente personalizada.
+          La condición de preventa no elimina el derecho de desistimiento, salvo que una unidad se prepare conforme a
+          especificaciones individuales o esté claramente personalizada.
         </p>
       </section>
 

@@ -40,7 +40,7 @@ export function cartItemDelivery(productId: string) {
     return "PRE-ORDER · Entrega estimada: 4 semanas.";
   }
   if (productId === "miracle-x-nicaso") {
-    return "PRE-ORDER · Producción estimada: 3–5 semanas.";
+    return "PRE-ORDER · Entrega estimada: 3–5 semanas.";
   }
   return null;
 }

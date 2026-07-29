@@ -46,7 +46,7 @@ export async function POST(request: Request) {
               name: `${product.name} · ${variant.label}`,
               description:
                 item.productId === "miracle-x-nicaso"
-                  ? "PRE-ORDER. Producción estimada: 3–5 semanas + transporte."
+                  ? "PRE-ORDER. Entrega estimada: 3–5 semanas."
                   : shipsTogether
                     ? "PRE-ORDER. Gorra: 4 semanas. Entrega conjunta cuando todo esté preparado (3–5 semanas)."
                     : "PRE-ORDER. Entrega estimada: 4 semanas.",

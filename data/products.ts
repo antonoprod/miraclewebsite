@@ -36,7 +36,7 @@ export const products: Product[] = [
       { label: "M", value: "m" },
       { label: "L", value: "l" },
     ],
-    note: "PRE-ORDER · Producción estimada: 3–5 semanas.",
+    note: "PRE-ORDER · Entrega estimada: 3–5 semanas.",
   },
   {
     id: "miracle-cap",
