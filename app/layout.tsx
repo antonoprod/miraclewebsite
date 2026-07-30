@@ -29,6 +29,20 @@ export const metadata: Metadata = {
     title: "Miracle",
     description: "Eventos, música, comunidad y drops limitados de Miracle.",
     url: "/",
+    images: [
+      {
+        url: "/social/miracle-share.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Miracle — música, creatividad y comunidad",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Miracle",
+    description: "Eventos, música, comunidad y drops limitados de Miracle.",
+    images: ["/social/miracle-share.jpg"],
   },
 };
 
